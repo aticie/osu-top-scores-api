@@ -2,6 +2,8 @@ FROM python:3.9-slim
 
 WORKDIR /src
 
+RUN pip install pymongo requests
+
 COPY ./cronjob.py .
 
 RUN apt-get update && apt-get install cron -y

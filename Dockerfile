@@ -15,11 +15,11 @@ RUN npm run build
 
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-slim
 
+WORKDIR /src
+
 COPY --from=frontend_public /usr/src/app/score-tracker-frontend/dist ./dist
 
 COPY src /src
-
-WORKDIR /src
 
 RUN pip install -r requirements.txt
 
