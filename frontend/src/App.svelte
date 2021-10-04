@@ -36,9 +36,11 @@
     <div class="beatmaps">
         {#each beatmaps as bmap}
             <div class="beatmap-single">
-                <div class="beatmap-cover"
-                     style="background-image: url('https://assets.ppy.sh/beatmaps/{bmap.beatmapset_id}/covers/cover.jpg')">
-                </div>
+                <a href="https://osu.ppy.sh/b/{bmap.beatmap_id}">
+                    <div class="beatmap-cover"
+                         style="background-image: url('https://assets.ppy.sh/beatmaps/{bmap.beatmapset_id}/covers/cover.jpg')">
+                    </div>
+                </a>
                 <div class="beatmap-details">
                     Avg. PP: {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)} <br>
                     Play Count: {bmap.play_count}
@@ -61,7 +63,8 @@
         flex-direction: column;
         color: #da0037;
     }
-    .beatmap-single{
+
+    .beatmap-single {
         font-size: x-large;
         display: flex;
         margin: 0 8em 0.7em 8em;
@@ -72,7 +75,8 @@
         width: 900px;
         background-size: cover;
     }
-    .beatmap-details{
+
+    .beatmap-details {
         margin: auto;
         color: #EDEDED;
     }
