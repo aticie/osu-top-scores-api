@@ -4,14 +4,15 @@ WORKDIR /usr/src/app
 
 RUN npm init vite@latest score-tracker-frontend --template svelte
 
-COPY ./frontend/public ./score-tracker-frontend/public
-COPY ./frontend/index.html ./score-tracker-frontend/index.html
-COPY ./frontend/src ./score-tracker-frontend/src
-
 WORKDIR /usr/src/app/score-tracker-frontend
 
 RUN npm install
 RUN npm install axios
+
+COPY ./frontend/public ./score-tracker-frontend/public
+COPY ./frontend/index.html ./score-tracker-frontend/index.html
+COPY ./frontend/src ./score-tracker-frontend/src
+
 RUN npm run build
 
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-slim
