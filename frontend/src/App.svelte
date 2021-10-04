@@ -3,23 +3,11 @@
 
     let mods = 'any';
     let beatmaps = [];
-        /*[{
-        'avg_pp': 685,
-        'beatmap_id': 1849580,
-        'mods': ['', 'HD'],
-        'play_count': 188,
-        'beatmapset_id': 765497
-    },
-        {'avg_pp': 539, 'beatmap_id': 1909555, 'mods': ['', 'HD'], 'play_count': 128, 'beatmapset_id': 914242},
-        {'avg_pp': 539, 'beatmap_id': 1909555, 'mods': ['', 'HD'], 'play_count': 128, 'beatmapset_id': 914242},
-        {'avg_pp': 539, 'beatmap_id': 1909555, 'mods': ['', 'HD'], 'play_count': 128, 'beatmapset_id': 914242},
-        {'avg_pp': 539, 'beatmap_id': 1909555, 'mods': ['', 'HD'], 'play_count': 128, 'beatmapset_id': 914242},
-    ];*/
     import Button from './lib/Button.svelte'
 
     let submit = () => {
         axios
-            .get('/beatmaps', {params: {mods: mods}})
+            .get('/beatmaps', {params: {mod: mods}})
             .then((res) => {
                 beatmaps = res.data.beatmaps;
                 console.log(beatmaps);
