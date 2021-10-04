@@ -40,9 +40,8 @@
                      style="background-image: url('https://assets.ppy.sh/beatmaps/{bmap.beatmapset_id}/covers/cover.jpg')">
                 </div>
                 <div class="beatmap-details">
-                    Avg. PP: {bmap.avg_pp} <br>
-
-                    PlayCount: {bmap.play_count}
+                    Avg. PP: {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)} <br>
+                    Play Count: {bmap.play_count}
                 </div>
             </div>
         {/each}

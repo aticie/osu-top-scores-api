@@ -46,13 +46,15 @@ async def list_beatmaps(mod: str = '', include_hd: bool = True, top_n: int = 5):
     scores_collection: AsyncIOMotorCollection = db["scores"]
 
     query = create_query_from_mod(mod, include_hd)
-    aggregation = [
-        {'$match': query},
-        {'$group': {'_id': "$beatmap_id", 'play_count': {'$count': {}}, 'avg_pp': {'$avg': '$pp'},
-                    'beatmapset_id': {'$first': "$beatmapset_id"}, 'mods': {'$addToSet': '$mods'}}},
-        {'$sort': {'play_count': -1}},
-        {'$limit': top_n}
-    ]
+    aggregation = []
+    if query is not None:
+        aggregation.extend([{'$match': query}])
+
+    aggregation.extend([{'$group': {'_id': "$beatmap_id", 'play_count': {'$count': {}}, 'avg_pp': {'$avg': '$pp'},
+                                    'beatmapset_id': {'$first': "$beatmapset_id"}, 'mods': {'$addToSet': '$mods'}}},
+                        {'$sort': {'play_count': -1}},
+                        {'$limit': top_n}
+                        ])
     results = []
     async for score in scores_collection.aggregate(aggregation):
         score['beatmap_id'] = score['_id']
