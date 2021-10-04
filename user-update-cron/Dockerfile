@@ -1,8 +1,8 @@
 FROM python:3.9-slim
 
-COPY src /src
-
 WORKDIR /src
+
+COPY ./cronjob.py .
 
 RUN apt-get update && apt-get install cron -y
 COPY ./cronjob /etc/cron.d/container_cronjob
