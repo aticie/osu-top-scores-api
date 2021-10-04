@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mongo-db:
+    image: 'mongo:5.0.3'
+    container_name: 'beatmaps-mongo-db'
+    environment:
+      - MONGO_INITDB_DATABASE=database
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=verysecret
+    volumes:
+      - ./mongo-volume:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+  mongo-express:
+    image: 'mongo-express:latest'
+    restart: always
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=host.docker.internal
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=root
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=verysecret
+      - ME_CONFIG_BASICAUTH_USERNAME=root
+      - ME_CONFIG_BASICAUTH_PASSWORD=verysecret
+    depends_on:
+      - mongo-db
+    ports:
+      - "8888:8081"
