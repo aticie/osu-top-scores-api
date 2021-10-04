@@ -9,9 +9,9 @@ WORKDIR /usr/src/app/score-tracker-frontend
 RUN npm install
 RUN npm install axios
 
-COPY ./frontend/public ./score-tracker-frontend/public
-COPY ./frontend/index.html ./score-tracker-frontend/index.html
-COPY ./frontend/src ./score-tracker-frontend/src
+COPY ./frontend/public ./public
+COPY ./frontend/index.html ./index.html
+COPY ./frontend/src ./src
 
 RUN npm run build
 
