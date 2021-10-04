@@ -1,4 +1,9 @@
 version: '3'
+secrets:
+  osu_client_id:
+    external: true
+  osu_client_secret:
+    external: true
 services:
   mongo-db:
     image: 'mongo:5.0.3'
@@ -25,3 +30,34 @@ services:
       - mongo-db
     ports:
       - "8888:8081"
+  score-tracker-server:
+    build: Dockerfile
+    image: eatici/osu-top-scores:latest
+    restart: always
+    secrets:
+      - osu_client_id
+      - osu_client_secret
+    environment:
+      MONGODB_URL=mongodb://host.docker.internal
+      OSU_CLIENT_ID=/run/secrets/osu_client_id
+      OSU_CLIENT_SECRET=/run/secrets/osu_client_secret
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fastapi.rule=Host(`top500.ronnia.me`)"
+      - "traefik.http.routers.fastapi.tls=true"
+      - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
+    expose:
+      - 8000
+  score-tracker-user-update:
+    build: Dockerfile.user_update
+    environment:
+      - MONGODB_URL=mongodb://host.docker.internal
+  traefik:
+    image: traefik:v2.2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/efehanatici/traefik/traefik.prod.toml:/etc/traefik/traefik.toml
+

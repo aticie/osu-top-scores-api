@@ -1,14 +1,9 @@
-import asyncio
-import copy
 import datetime
 import os
 import time
-from urllib.parse import urljoin
 
-import requests
-from bson import ObjectId
 import pymongo
-from pymongo import ReadPreference
+import requests
 from pymongo.collection import Collection
 
 
@@ -25,9 +20,9 @@ class OsuApi:
 
     def _authorize(self) -> dict:
         data = {'client_id': self._client_id,
-                  'client_secret': self._client_secret,
-                  'grant_type': 'client_credentials',
-                  'scope': 'public'}
+                'client_secret': self._client_secret,
+                'grant_type': 'client_credentials',
+                'scope': 'public'}
 
         with requests.post('https://osu.ppy.sh/oauth/token', json=data) as r:
             response = r.json()
@@ -53,7 +48,6 @@ class OsuApi:
         return top_scores
 
     def _get_endpoint(self, endpoint, params=None):
-
         time_now = datetime.datetime.now()
         if time_now < self._last_request_time + self._cooldown:
             wait_for = (self._last_request_time + self._cooldown - time_now).total_seconds()
@@ -83,6 +77,7 @@ if __name__ == '__main__':
             for score in player_scores:
                 score['_id'] = score['id']
                 score['beatmap_id'] = score['beatmap']['id']
+                score['beatmapset_id'] = score['beatmapset']['id']
                 del score['statistics']
                 del score['id']
                 del score['beatmap']
@@ -95,7 +90,5 @@ if __name__ == '__main__':
             if len(db_scores) != 0:
                 print(f'Inserting scores for {player_details["user"]["username"]}')
                 scores_collection.insert_many(db_scores)
-
-
-
-
+            else:
+                print(f'Skipping scores of {player_details["user"]["username"]}...')
