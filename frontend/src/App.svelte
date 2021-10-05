@@ -1,17 +1,28 @@
 <script>
     import axios from "axios";
 
+    let top_n = 5;
     let mods = 'any';
     let unicode = false;
+    let include_hd = true;
     let beatmaps = [];
     import Button from './lib/Button.svelte'
+    import Slider from "./lib/Slider.svelte";
+
+    function setSliderValue(event) {
+        if (event.detail === 100) {
+            top_n = -1;
+        }
+        else{
+            top_n = event.detail
+        }
+    }
 
     let submit = () => {
         axios
-            .get('/beatmaps', {params: {mod: mods}})
+            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, top_n: top_n}})
             .then((res) => {
                 beatmaps = res.data.beatmaps;
-                console.log(beatmaps);
             })
     };
 </script>
@@ -30,6 +41,16 @@
         DT
 
     </p>
+    <div class="checkboxes">
+
+        <div class="checkbox-single">
+            <input type="checkbox" bind:checked={unicode}/> Show titles in local language
+        </div>
+        <div class="checkbox-single">
+            <input type="checkbox" bind:checked={include_hd}/> Include hidden plays
+        </div>
+    </div>
+    <Slider on:message={setSliderValue}/>
     <Button
             text="Get Beatmaps"
             onClick={submit}
@@ -50,19 +71,19 @@
                 </a>
                 <div class="beatmap-details">
                     <div class="beatmap-detail">
-                        <div class="detail-value">
-                            {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)}
-                        </div>
                         <div class="detail-title">
                             Average PP
                         </div>
+                        <div class="detail-value">
+                            {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)}
+                        </div>
                     </div>
                     <div class="beatmap-detail">
-                        <div class="detail-value">
-                            {bmap.play_count}
-                        </div>
                         <div class="detail-title">
                             Play Count
+                        </div>
+                        <div class="detail-value">
+                            {bmap.play_count}
                         </div>
                     </div>
 
@@ -79,6 +100,11 @@
         background: #171717;
     }
 
+    .checkboxes{
+        color: #EDEDED;
+        line-height: 200%;
+    }
+
     .beatmaps {
         margin-top: 3rem;
         display: flex;
@@ -90,6 +116,7 @@
         font-size: x-large;
         display: flex;
         margin: 0.5rem 0;
+        justify-content: center;
     }
 
     .beatmap-url {
@@ -97,11 +124,12 @@
         flex-grow: 1;
         text-decoration: none;
         color: #fff;
+        max-width: 900px;
     }
 
     .beatmap-cover {
         display: flex;
-        min-height: 10em;
+        min-height: 5rem;
         padding: 1rem;
         flex-grow: 1;
         border-radius: 2rem;
@@ -146,7 +174,6 @@
     }
 
     p {
-        max-width: 14rem;
         margin: 1rem auto;
         line-height: 1.35;
         color: #EDEDED;
