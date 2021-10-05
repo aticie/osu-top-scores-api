@@ -4,6 +4,7 @@ import time
 
 import pymongo
 import requests
+import schedule
 from pymongo.collection import Collection
 
 
@@ -60,12 +61,8 @@ class OsuApi:
         return response
 
 
-if __name__ == '__main__':
-    client = pymongo.mongo_client.MongoClient(os.environ["MONGODB_URL"], username='root', password='verysecret')
-    scores_collection: Collection = client.database.scores
-
-    osu_api = OsuApi(client_id=os.getenv("OSU_CLIENT_ID"), client_secret=os.getenv("OSU_CLIENT_SECRET"))
-    for page_num in range(1, 11):
+def insert_scores_routine(osu_api: OsuApi, scores_collection: Collection):
+    for page_num in range(1, 21):
         top_players = osu_api.get_top_std_players(page=page_num)
         print(f'Looking at page {page_num} of performance rankings.')
 
@@ -76,15 +73,7 @@ if __name__ == '__main__':
             db_scores = []
             for score in player_scores:
                 score['_id'] = score['id']
-                score['beatmap_id'] = score['beatmap']['id']
-                score['beatmapset_id'] = score['beatmapset']['id']
-                del score['statistics']
-                del score['id']
-                del score['beatmap']
-                del score['beatmapset']
-                del score['weight']
-                del score['user']
-                if scores_collection.find_one(score):
+                if scores_collection.find_one({'_id': score['id']}):
                     continue
                 db_scores.append(score)
             if len(db_scores) != 0:
@@ -92,3 +81,27 @@ if __name__ == '__main__':
                 scores_collection.insert_many(db_scores)
             else:
                 print(f'Skipping scores of {player_details["user"]["username"]}...')
+
+
+def initialize_db():
+    client = pymongo.mongo_client.MongoClient(os.environ["MONGODB_URL"], username='root', password='verysecret')
+    scores_collection: Collection = client.database.scores
+    scores_collection.create_index([("pp", pymongo.DESCENDING)])
+    scores_collection.create_index([("score", pymongo.DESCENDING)])
+    scores_collection.create_index([("beatmap.$**", 1)])
+    scores_collection.create_index([("beatmapset.$**", 1)])
+    scores_collection.create_index([("user.$**", 1)])
+
+    return scores_collection
+
+
+if __name__ == '__main__':
+
+    api = OsuApi(client_id=os.getenv("OSU_CLIENT_ID"), client_secret=os.getenv("OSU_CLIENT_SECRET"))
+    collection = initialize_db()
+
+    insert_scores_routine(api, collection)
+    schedule.every().second.do(insert_scores_routine, api, collection)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
