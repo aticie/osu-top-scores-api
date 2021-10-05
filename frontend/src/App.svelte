@@ -1,6 +1,13 @@
 <script>
     import axios from "axios";
 
+    const all_mods = [
+        { text: "Any", req: "any" }, 
+        { text: "NM",  req: ""    }, 
+        { text: "HR",  req: "hr"  }, 
+        { text: "DT",  req: "dt"  },
+    ];
+
     let top_n = 5;
     let mods = 'any';
     let unicode = false;
@@ -32,33 +39,32 @@
 </script>
 
 <main>
-    <h1>osu! Top 1000 Scores Database</h1>
-
-    <p>
-        <input type=radio bind:group={mods} name="mods" value={'any'}>
-        Any
-        <input type=radio bind:group={mods} name="mods" value={''}>
-        NM
-        <input type=radio bind:group={mods} name="mods" value={'HR'}>
-        HR
-        <input type=radio bind:group={mods} name="mods" value={'DT'}>
-        DT
-
-    </p>
-    <div class="checkboxes">
-
-        <div class="checkbox-single">
-            <input type="checkbox" bind:checked={unicode}/> Show titles in local language
-        </div>
-        <div class="checkbox-single">
-            <input type="checkbox" bind:checked={include_hd}/> Include hidden plays
-        </div>
+    <div class="title">
+        <h1>osu! Top 1000 Scores Database</h1>
     </div>
-    <Slider on:message={setSliderValue}/>
-    <Button
-            text="Get Beatmaps"
-            onClick={submit}
-    />
+    <div class="settings">
+        <div class="mods">
+            {#each all_mods as mod}
+                <div class="btn-mods">
+                    <input type=radio bind:group={mods} name="mods" id={mod.text} value={mod.req}>
+                    <label for={mod.text}>{mod.text}</label>
+                </div>
+            {/each}
+        </div>
+        <div class="checkboxes">
+            <div class="checkbox-single">
+                <input type="checkbox" bind:checked={unicode}/> Unicode Titles
+            </div>
+            <div class="checkbox-single">
+                <input type="checkbox" bind:checked={include_hd}/> Include HD
+            </div>
+        </div>
+        <Button
+                text="Get Beatmaps"
+                onClick={submit}
+        />
+        <Slider on:message={setSliderValue}/>
+    </div>
     <div class="beatmaps">
         {#each beatmaps as bmap}
             <div class="beatmap-single">
@@ -104,9 +110,46 @@
         background: #171717;
     }
 
+    .settings, .mods {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+    }
+
+    .settings {
+        padding-top: 0.5em;
+        position: sticky;
+        top: 0;
+        background: #171717;
+    }
+
+    .btn-mods label {
+        display: inline-block;
+        width: 2em;
+        padding: 0.3em;
+        border: solid 2px #ccc;
+        border-radius: 0.5em;
+        transition: all 0.3s;
+        color: #ffffff;
+        margin: 0.5em;
+    }
+
+    .btn-mods input[type="radio"] {
+        display: none;
+    }
+
+    .btn-mods input[type="radio"]:checked + label {
+        border: solid 2px #da0037;
+    }
+
     .checkboxes{
+        display: flex;
         color: #EDEDED;
-        line-height: 200%;
+        align-items: center;
+    }
+
+    .checkbox-single{
+        margin: 0 1em;
     }
 
     .beatmaps {
@@ -171,10 +214,10 @@
 
     h1 {
         color: #da0037;
-        font-size: 4rem;
+        font-size: 2rem;
         font-weight: 350;
         line-height: 1.1;
-        margin: 2rem auto;
+        margin: 0.5rem auto;
     }
 
     p {
