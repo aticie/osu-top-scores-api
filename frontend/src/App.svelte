@@ -53,10 +53,10 @@
         </div>
         <div class="checkboxes">
             <div class="checkbox-single">
-                <input type="checkbox" bind:checked={unicode}/> Unicode Titles
+                <input class="checkbox" type="checkbox" bind:checked={unicode}/> Unicode Titles
             </div>
             <div class="checkbox-single">
-                <input type="checkbox" bind:checked={include_hd}/> Include HD
+                <input class="checkbox" type="checkbox" bind:checked={include_hd}/> Include HD
             </div>
         </div>
         <Button
@@ -123,6 +123,21 @@
         background: #171717;
     }
 
+    .checkbox {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 0.375rem;
+        background-image: url("../tick.svg");
+        transition: all 150ms ease;
+    }
+
+    .checkbox:checked {
+        background-color: #da0037;
+    }
+
+
     .btn-mods label {
         display: inline-block;
         width: 2em;
@@ -150,6 +165,9 @@
 
     .checkbox-single{
         margin: 0 1em;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
     .beatmaps {
