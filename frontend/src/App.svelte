@@ -36,14 +36,33 @@
     <div class="beatmaps">
         {#each beatmaps as bmap}
             <div class="beatmap-single">
-                <a href="https://osu.ppy.sh/b/{bmap.beatmap_id}">
+                <a class="beatmap-url" href="https://osu.ppy.sh/b/{bmap.beatmap_id}">
                     <div class="beatmap-cover"
-                         style="background-image: url('https://assets.ppy.sh/beatmaps/{bmap.beatmapset_id}/covers/cover.jpg')">
+                        style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://assets.ppy.sh/beatmaps/{bmap.beatmapset_id}/covers/cover.jpg')">
+                        <span>Artist</span>
+                        <br>
+                        <span>Song Name</span>
+                        <p>Difficulty Name</p>
                     </div>
                 </a>
                 <div class="beatmap-details">
-                    Avg. PP: {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)} <br>
-                    Play Count: {bmap.play_count}
+                    <div class="beatmap-detail">
+                        <div class="detail-value">
+                            {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)} 
+                        </div>
+                        <div class="detail-title">
+                            average pp
+                        </div>
+                    </div>
+                    <div class="beatmap-detail">
+                        <div class="detail-value">
+                            {bmap.play_count}
+                        </div>
+                        <div class="detail-title">
+                            play count
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         {/each}
@@ -58,7 +77,7 @@
     }
 
     .beatmaps {
-        margin-top: 3em;
+        margin-top: 3rem;
         display: flex;
         flex-direction: column;
         color: #da0037;
@@ -67,18 +86,42 @@
     .beatmap-single {
         font-size: x-large;
         display: flex;
-        margin: 0 8em 0.7em 8em;
+        margin: 0.5rem 0;
+    }
+
+    .beatmap-url {
+        display: flex;
+        flex-grow: 1;
+        text-decoration: none;
+        color: #fff;
     }
 
     .beatmap-cover {
-        height: 250px;
-        width: 900px;
+        display: flex;
+        min-height: 10em;
+        padding: 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        text-align: center;
+        flex-direction: column;
+		justify-content: center;
         background-size: cover;
+        background-position: center;
     }
 
     .beatmap-details {
-        margin: auto;
+        display: flex;
+        flex-direction: column;
+        margin-left: 1em;
         color: #EDEDED;
+    }
+
+    .beatmap-detail {
+        margin: 2em auto;
+    }
+
+    .detail-title {
+        font-weight: bold;
     }
 
     input {
@@ -87,7 +130,7 @@
 
     main {
         text-align: center;
-        padding: 1em;
+        padding: 1rem;
         margin: 0 auto;
     }
 
@@ -97,7 +140,6 @@
         font-weight: 350;
         line-height: 1.1;
         margin: 2rem auto;
-        max-width: 14rem;
     }
 
     p {
@@ -107,13 +149,18 @@
         color: #EDEDED;
     }
 
-    @media (min-width: 480px) {
-        h1 {
-            max-width: none;
+    span {
+        font-weight: bold;
+    }
+
+    @media (max-width:576px) {
+        .beatmap-single {
+            flex-direction: column;
+        }
+        .beatmap-details {
+            margin-left: 0;
+            flex-direction: row;
         }
 
-        p {
-            max-width: none;
-        }
     }
 </style>
