@@ -19,8 +19,12 @@
     }
 
     let submit = () => {
+        let top_results = top_n
+        if (top_n === -1)
+            top_results = 10000
+
         axios
-            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, top_n: top_n}})
+            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, top_n: top_results}})
             .then((res) => {
                 beatmaps = res.data.beatmaps;
             })

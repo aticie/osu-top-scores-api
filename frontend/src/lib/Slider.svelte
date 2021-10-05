@@ -12,7 +12,7 @@
 
 <div class="slidecontainer">
     <div class="slidertitle">
-        Show {current_value} number of results!
+        Show {#if current_value === 100}∞{:else }{current_value}{/if} number of results!
     </div>
     <div class="sliderbody">
         <input type="range" min="1" max="100" bind:value={current_value} on:input={sendValue} class="slider">
