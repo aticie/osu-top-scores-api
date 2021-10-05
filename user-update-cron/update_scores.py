@@ -114,7 +114,7 @@ if __name__ == '__main__':
     collection = initialize_db()
 
     insert_scores_routine(api, collection)
-    schedule.every().second.do(insert_scores_routine, api, collection)
+    schedule.every().day.at("12:00").do(insert_scores_routine, api, collection)
     while True:
         schedule.run_pending()
         logger.info(f'Waiting...')
