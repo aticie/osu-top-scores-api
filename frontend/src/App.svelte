@@ -2,6 +2,7 @@
     import axios from "axios";
 
     let mods = 'any';
+    let unicode = false;
     let beatmaps = [];
     import Button from './lib/Button.svelte'
 
@@ -16,7 +17,7 @@
 </script>
 
 <main>
-    <h1>osu! Top 500 Scores Database</h1>
+    <h1>osu! Top 1000 Scores Database</h1>
 
     <p>
         <input type=radio bind:group={mods} name="mods" value={'any'}>
@@ -38,20 +39,22 @@
             <div class="beatmap-single">
                 <a class="beatmap-url" href="https://osu.ppy.sh/b/{bmap.beatmap_id}">
                     <div class="beatmap-cover"
-                        style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://assets.ppy.sh/beatmaps/{bmap.beatmapset_id}/covers/cover.jpg')">
-                        <span>Artist</span>
+                         style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{bmap.cover_url}')">
+                        <span>{#if unicode}{bmap.artist_unicode}
+                            {:else }{bmap.artist}{/if}</span>
                         <br>
-                        <span>Song Name</span>
-                        <p>Difficulty Name</p>
+                        <span>{#if unicode}{bmap.title_unicode}
+                            {:else }{bmap.title}{/if}</span>
+                        <p>{bmap.difficulty}</p>
                     </div>
                 </a>
                 <div class="beatmap-details">
                     <div class="beatmap-detail">
                         <div class="detail-value">
-                            {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)} 
+                            {(Math.round(bmap.avg_pp * 100) / 100).toFixed(2)}
                         </div>
                         <div class="detail-title">
-                            average pp
+                            Average PP
                         </div>
                     </div>
                     <div class="beatmap-detail">
@@ -59,10 +62,10 @@
                             {bmap.play_count}
                         </div>
                         <div class="detail-title">
-                            play count
+                            Play Count
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         {/each}
@@ -104,7 +107,7 @@
         border-radius: 2rem;
         text-align: center;
         flex-direction: column;
-		justify-content: center;
+        justify-content: center;
         background-size: cover;
         background-position: center;
     }
@@ -153,10 +156,11 @@
         font-weight: bold;
     }
 
-    @media (max-width:576px) {
+    @media (max-width: 576px) {
         .beatmap-single {
             flex-direction: column;
         }
+
         .beatmap-details {
             margin-left: 0;
             flex-direction: row;
