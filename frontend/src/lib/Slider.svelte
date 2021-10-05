@@ -34,11 +34,12 @@
         max-width: 500px;
         -webkit-appearance: none;
         width: 100%;
-        height: 25px;
+        height: 20px;
         background: #373737;
         outline: none;
         opacity: 0.9;
         -webkit-transition: .2s;
+        border-radius: 2rem;
         transition: opacity .2s;
     }
 
@@ -52,6 +53,7 @@
         width: 25px;
         height: 25px;
         background: #da0037;
+        border-radius: 2rem;;
         cursor: pointer;
     }
 
