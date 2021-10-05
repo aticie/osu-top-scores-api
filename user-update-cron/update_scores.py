@@ -101,6 +101,7 @@ def initialize_db():
     scores_collection: Collection = client.database.scores
     scores_collection.create_index([("pp", pymongo.DESCENDING)])
     scores_collection.create_index([("score", pymongo.DESCENDING)])
+    scores_collection.create_index([("mods", pymongo.DESCENDING)])
     scores_collection.create_index([("beatmap.$**", 1)])
     scores_collection.create_index([("beatmapset.$**", 1)])
     scores_collection.create_index([("user.$**", 1)])
