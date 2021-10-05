@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import time
 
@@ -6,6 +7,17 @@ import pymongo
 import requests
 import schedule
 from pymongo.collection import Collection
+
+logger = logging.getLogger('user_update')
+logger.setLevel(os.getenv('LOG_LEVEL').upper())
+loggers_formatter = logging.Formatter(
+    '%(asctime)s | %(levelname)s | %(process)d | %(name)s | %(funcName)s | %(message)s',
+    datefmt='%d/%m/%Y %I:%M:%S')
+
+ch = logging.StreamHandler()
+ch.setFormatter(loggers_formatter)
+logger.addHandler(ch)
+logger.propagate = False
 
 
 class OsuApi:
@@ -62,9 +74,10 @@ class OsuApi:
 
 
 def insert_scores_routine(osu_api: OsuApi, scores_collection: Collection):
+    logger.info(f'Started insert_scores_routine()!')
     for page_num in range(1, 21):
         top_players = osu_api.get_top_std_players(page=page_num)
-        print(f'Looking at page {page_num} of performance rankings.')
+        logger.info(f'Looking at page {page_num} of performance rankings.')
 
         for player_details in top_players:
             player_user_id = player_details['user']['id']
@@ -77,10 +90,10 @@ def insert_scores_routine(osu_api: OsuApi, scores_collection: Collection):
                     continue
                 db_scores.append(score)
             if len(db_scores) != 0:
-                print(f'Inserting scores for {player_details["user"]["username"]}')
+                logger.info(f'Inserting scores for {player_details["user"]["username"]}')
                 scores_collection.insert_many(db_scores)
             else:
-                print(f'Skipping scores of {player_details["user"]["username"]}...')
+                logger.info(f'Skipping scores of {player_details["user"]["username"]}...')
 
 
 def initialize_db():
@@ -104,4 +117,5 @@ if __name__ == '__main__':
     schedule.every().second.do(insert_scores_routine, api, collection)
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        logger.info(f'Waiting...')
+        time.sleep(600)
