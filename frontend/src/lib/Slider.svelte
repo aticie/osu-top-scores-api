@@ -23,7 +23,7 @@
     .slidecontainer {
         width: 100%;
         justify-content: center;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
         margin-bottom: 1rem;
     }
     .slidertitle{
