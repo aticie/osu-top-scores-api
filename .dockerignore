@@ -1,4 +1,6 @@
 venv/
+dist/
 frontend/node_modules
 frontend/dist
+mongo-volume/
 user-update-cron

@@ -1,3 +1,4 @@
+import json
 import os
 import time
 
@@ -12,7 +13,7 @@ router = APIRouter(prefix="/beatmaps",
 
 client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"], username='root', password='verysecret')
 db = client.database
-
+scores_collection: AsyncIOMotorCollection = db["scores"]
 
 def create_query_from_mod(mod: str, include_hd: bool):
     mod = mod.upper()
@@ -31,11 +32,11 @@ def create_query_from_mod(mod: str, include_hd: bool):
 
     if include_hd:
         if mod == 'DT':
-            query = {'$or': [{'mods': mod}, {'mods': [mod, 'HD']}, {'mods': 'NC'}, {'mods': {'$all': ['NC', 'HD']}}]}
+            query = {'$or': [{'mods': mod}, {'mods': [mod, 'HD']}, {'mods': 'NC'}, {'mods': ['NC', 'HD']}]}
         else:
-            query = {'$or': [{'mods': mod}, {'mods': {'$all': [mod, 'HD']}}]}
+            query = {'$or': [{'mods': mod}, {'mods': [mod, 'HD']}]}
     else:
-        query = {'mods': {'$and': [{'$all': [mod]}, {'$ne': ['HD']}]}}
+        query = {'$and': [{'mods': ['HR']}, {'mods': {'$ne': 'HD'}}]}
 
     return query
 
@@ -45,7 +46,6 @@ def create_query_from_mod(mod: str, include_hd: bool):
 )
 async def list_beatmaps(mod: str = '', include_hd: bool = True, top_n: int = 5):
     start_time = time.time()
-    scores_collection: AsyncIOMotorCollection = db["scores"]
 
     query = create_query_from_mod(mod, include_hd)
     aggregation = []
