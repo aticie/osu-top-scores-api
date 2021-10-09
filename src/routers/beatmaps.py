@@ -1,5 +1,6 @@
 import os
 import time
+from typing import Tuple
 
 import motor.motor_asyncio
 from fastapi import APIRouter
@@ -44,7 +45,7 @@ def create_query_from_mod(mod: str, include_hd: bool):
 @router.get(
     "", response_description="List all beatmaps"
 )
-async def list_beatmaps(mod: str = '', include_hd: bool = True, page: int = 1):
+async def list_beatmaps(mod: str = '', pp_range: Tuple[int, int] = (0, 10000), include_hd: bool = True, page: int = 1):
     start_time = time.time()
     limit = 10
     skip_this = (page - 1) * limit

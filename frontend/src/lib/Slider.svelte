@@ -1,7 +1,9 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import RangeSlider from "svelte-range-slider-pips";
 
     let current_value = 5;
+    export let initial_values = [500, 800]
     const dispatch = createEventDispatcher();
 
     function sendValue() {
@@ -12,10 +14,10 @@
 
 <div class="slidecontainer">
     <div class="slidertitle">
-        Show {#if current_value === 100}∞{:else }{current_value}{/if} number of results!
+        Show between {initial_values[0]}pp - {initial_values[1]}pp
     </div>
     <div class="sliderbody">
-        <input type="range" min="1" max="100" bind:value={current_value} on:input={sendValue} class="slider">
+        <RangeSlider range float pushy bind:values={initial_values} step={10} min={0} max={1300}/>
     </div>
 </div>
 
@@ -25,12 +27,14 @@
         justify-content: center;
         margin-top: 0.5rem;
         margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
     }
     .slidertitle{
         color: #EDEDED;
     }
 
-    .slider {
+    .sliderbody {
         max-width: 500px;
         -webkit-appearance: none;
         width: 100%;
