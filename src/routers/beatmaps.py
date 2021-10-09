@@ -40,7 +40,7 @@ def create_query_from_mod(mod: str, pp_range: Tuple[int, int], include_hd: bool)
         else:
             query = {'$and': [{'$or': [{'mods': mod}, {'mods': [mod, 'HD']}]}, pp_query]}
     else:
-        query = {'$and': [{'$and': [{'mods': ['HR']}, {'mods': {'$ne': 'HD'}}]}, pp_query]}
+        query = {'$and': [{'$and': [{'mods': mod}, {'mods': {'$ne': 'HD'}}]}, pp_query]}
 
     return query
 
