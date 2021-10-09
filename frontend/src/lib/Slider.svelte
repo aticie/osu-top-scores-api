@@ -39,6 +39,7 @@
     .slidertitle{
         vertical-align: middle;
         color: #EDEDED;
+        line-height: 35px;
     }
 
     .sliderbody {
