@@ -6,10 +6,10 @@
 
 
     const all_mods = [
-        { text: "Any", req: "any" }, 
-        { text: "NM",  req: ""    }, 
-        { text: "HR",  req: "hr"  }, 
-        { text: "DT",  req: "dt"  },
+        {text: "Any", req: "any"},
+        {text: "NM", req: ""},
+        {text: "HR", req: "hr"},
+        {text: "DT", req: "dt"},
     ];
 
     let top_n = 5;
@@ -17,28 +17,25 @@
     let unicode = false;
     let include_hd = true;
     let beatmaps = [];
+    let pp_range = [500, 800]
     let page = 1;
 
 
     function setSliderValue(event) {
-        if (event.detail === 100) {
-            top_n = -1;
-        }
-        else{
-            top_n = event.detail
-        }
+        console.log('New pp range: ' + pp_range)
+        console.log(event)
+        pp_range = event.detail
     }
 
-    function infiniteHandler({ detail: { loaded, complete } }) {
+    function infiniteHandler({detail: {loaded, complete}}) {
         axios
-            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, page: page}})
+            .get('/beatmaps', {params: {mod: mods, pp_range: pp_range, include_hd: include_hd, page: page}})
             .then((res) => {
                 if (res.data.beatmaps.length) {
                     beatmaps = [...beatmaps, ...res.data.beatmaps];
                     page++;
                     loaded();
-                }
-                else{
+                } else {
                     complete();
                 }
             });
@@ -48,7 +45,7 @@
         beatmaps = [];
         page = 1;
         axios
-            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, page: page}})
+            .get('/beatmaps', {params: {mod: mods, pp_range: pp_range, include_hd: include_hd, page: page}})
             .then((res) => {
                 beatmaps = [...beatmaps, ...res.data.beatmaps];
                 page++;
@@ -120,7 +117,7 @@
         {/each}
     </div>
 
-    <InfiniteLoading on:infinite={infiniteHandler} />
+    <InfiniteLoading on:infinite={infiniteHandler}/>
 </main>
 
 <style>
@@ -177,13 +174,13 @@
         border: solid 2px #da0037;
     }
 
-    .checkboxes{
+    .checkboxes {
         display: flex;
         color: #EDEDED;
         align-items: center;
     }
 
-    .checkbox-single{
+    .checkbox-single {
         margin: 0 1em;
         display: flex;
         align-items: center;

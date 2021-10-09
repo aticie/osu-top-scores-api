@@ -2,44 +2,50 @@
     import { createEventDispatcher } from 'svelte';
     import RangeSlider from "svelte-range-slider-pips";
 
-    let current_value = 5;
-    export let initial_values = [500, 800]
+    let values = [500, 800]
     const dispatch = createEventDispatcher();
 
     function sendValue() {
-        console.log('Sending ' + {current_value})
-        dispatch('message', current_value);
+        console.log('Sending ' + values);
+        dispatch('message', values);
     }
 </script>
 
 <div class="slidecontainer">
     <div class="slidertitle">
-        Show between {initial_values[0]}pp - {initial_values[1]}pp
+        PP:
     </div>
     <div class="sliderbody">
-        <RangeSlider range float pushy bind:values={initial_values} step={10} min={0} max={1300}/>
+        <RangeSlider range float pushy bind:values={values} step={5} min={400} max={1300} on:change={sendValue}/>
     </div>
 </div>
 
 <style>
+    :root{
+        --range-slider: #EDEDED;
+        --range-handle-inactive: #da0037;
+        --range-handle-focus:#ff5361;
+        --range-range: #da0037;
+        --range-handle:#da0037;
+    }
     .slidecontainer {
         width: 100%;
         justify-content: center;
         margin-top: 0.5rem;
         margin-bottom: 1rem;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
     }
     .slidertitle{
+        vertical-align: middle;
         color: #EDEDED;
     }
 
     .sliderbody {
         max-width: 500px;
+        align-self: center;
         -webkit-appearance: none;
         width: 100%;
-        height: 20px;
-        background: #373737;
         outline: none;
         opacity: 0.9;
         -webkit-transition: .2s;

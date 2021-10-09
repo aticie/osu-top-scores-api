@@ -1,9 +1,9 @@
 import os
 import time
-from typing import Tuple
+from typing import Tuple, Optional
 
 import motor.motor_asyncio
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from motor.motor_asyncio import AsyncIOMotorCollection
 
 router = APIRouter(prefix="/beatmaps",
@@ -16,28 +16,31 @@ db = client.database
 scores_collection: AsyncIOMotorCollection = db["scores"]
 
 
-def create_query_from_mod(mod: str, include_hd: bool):
+def create_query_from_mod(mod: str, pp_range: Tuple[int, int], include_hd: bool):
     mod = mod.upper()
+
+    pp_query = {'$and': [{'pp': {'$gt': pp_range[0]}}, {'pp': {'$lt': pp_range[1]}}]}
+
     if mod == 'ANY':
         if include_hd:
-            return
-        query = {'mods': {'$ne': 'HD'}}
+            return pp_query
+        query = {'$and': [{'mods': {'$ne': 'HD'}}, pp_query]}
         return query
 
     if mod == '':
         if include_hd:
-            query = {'$or': [{'mods': []}, {'mods': ['HD']}]}
+            query = {'$and': [{'$or': [{'mods': []}, {'mods': ['HD']}]}, pp_query]}
         else:
-            query = {'mods': []}
+            query = {'$and': [{'mods': []}, pp_query]}
         return query
 
     if include_hd:
         if mod == 'DT':
-            query = {'$or': [{'mods': mod}, {'mods': [mod, 'HD']}, {'mods': 'NC'}, {'mods': ['NC', 'HD']}]}
+            query = {'$and': [{'$or': [{'mods': mod}, {'mods': [mod, 'HD']}, {'mods': 'NC'}, {'mods': ['NC', 'HD']}]}, pp_query]}
         else:
-            query = {'$or': [{'mods': mod}, {'mods': [mod, 'HD']}]}
+            query = {'$and': [{'$or': [{'mods': mod}, {'mods': [mod, 'HD']}]}, pp_query]}
     else:
-        query = {'$and': [{'mods': ['HR']}, {'mods': {'$ne': 'HD'}}]}
+        query = {'$and': [{'$and': [{'mods': ['HR']}, {'mods': {'$ne': 'HD'}}]}, pp_query]}
 
     return query
 
@@ -45,12 +48,13 @@ def create_query_from_mod(mod: str, include_hd: bool):
 @router.get(
     "", response_description="List all beatmaps"
 )
-async def list_beatmaps(mod: str = '', pp_range: Tuple[int, int] = (0, 10000), include_hd: bool = True, page: int = 1):
+async def list_beatmaps(mod: str = '', pp_range: Tuple[int,int] = Query([400, 900],
+        alias="pp_range[]" ), include_hd: bool = True, page: int = 1):
     start_time = time.time()
     limit = 10
     skip_this = (page - 1) * limit
 
-    query = create_query_from_mod(mod, include_hd)
+    query = create_query_from_mod(mod, pp_range, include_hd)
     aggregation = []
     if query is not None:
         aggregation.extend([{'$match': query}])
