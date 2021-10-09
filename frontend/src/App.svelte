@@ -1,5 +1,9 @@
 <script>
     import axios from "axios";
+    import InfiniteLoading from 'svelte-infinite-loading';
+    import Button from './lib/Button.svelte';
+    import Slider from "./lib/Slider.svelte";
+
 
     const all_mods = [
         { text: "Any", req: "any" }, 
@@ -13,8 +17,8 @@
     let unicode = false;
     let include_hd = true;
     let beatmaps = [];
-    import Button from './lib/Button.svelte'
-    import Slider from "./lib/Slider.svelte";
+    let page = 1;
+
 
     function setSliderValue(event) {
         if (event.detail === 100) {
@@ -25,16 +29,30 @@
         }
     }
 
-    let submit = () => {
-        let top_results = top_n
-        if (top_n === -1)
-            top_results = 10000
-
+    function infiniteHandler({ detail: { loaded, complete } }) {
         axios
-            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, top_n: top_results}})
+            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, page: page}})
             .then((res) => {
-                beatmaps = res.data.beatmaps;
-            })
+                if (res.data.beatmaps.length) {
+                    beatmaps = [...beatmaps, ...res.data.beatmaps];
+                    page++;
+                    loaded();
+                }
+                else{
+                    complete();
+                }
+            });
+    }
+
+    let submit = () => {
+        beatmaps = [];
+        page = 1;
+        axios
+            .get('/beatmaps', {params: {mod: mods, include_hd: include_hd, page: page}})
+            .then((res) => {
+                beatmaps = [...beatmaps, ...res.data.beatmaps];
+                page++;
+            });
     };
 </script>
 
@@ -101,6 +119,8 @@
             </div>
         {/each}
     </div>
+
+    <InfiniteLoading on:infinite={infiniteHandler} />
 </main>
 
 <style>

@@ -19,7 +19,7 @@ services:
       - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_MONGODB_AUTH_USERNAME=root
       - ME_CONFIG_MONGODB_AUTH_PASSWORD=verysecret
-      - ME_CONFIG_BASICAUTH_USERNAME=root
+      - ME_CONFIG_BASICAUT  H_USERNAME=root
       - ME_CONFIG_BASICAUTH_PASSWORD=verysecret
     depends_on:
       - mongo

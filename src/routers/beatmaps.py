@@ -1,4 +1,3 @@
-import json
 import os
 import time
 
@@ -14,6 +13,7 @@ router = APIRouter(prefix="/beatmaps",
 client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"], username='root', password='verysecret')
 db = client.database
 scores_collection: AsyncIOMotorCollection = db["scores"]
+
 
 def create_query_from_mod(mod: str, include_hd: bool):
     mod = mod.upper()
@@ -44,8 +44,10 @@ def create_query_from_mod(mod: str, include_hd: bool):
 @router.get(
     "", response_description="List all beatmaps"
 )
-async def list_beatmaps(mod: str = '', include_hd: bool = True, top_n: int = 5):
+async def list_beatmaps(mod: str = '', include_hd: bool = True, page: int = 1):
     start_time = time.time()
+    limit = 10
+    skip_this = (page - 1) * limit
 
     query = create_query_from_mod(mod, include_hd)
     aggregation = []
@@ -63,7 +65,8 @@ async def list_beatmaps(mod: str = '', include_hd: bool = True, top_n: int = 5):
                                     'difficulty': {'$first': '$beatmap.version'},
                                     }},
                         {'$sort': {'play_count': -1}},
-                        {'$limit': top_n}
+                        {'$skip': skip_this},
+                        {'$limit': limit}
                         ])
     results = []
     async for score in scores_collection.aggregate(aggregation):
