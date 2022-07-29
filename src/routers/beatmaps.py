@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Tuple, Optional
+from typing import Tuple
 
 import motor.motor_asyncio
 from fastapi import APIRouter, Query
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/beatmaps",
                    responses={404: {"description": "Not found"}},
                    )
 
-client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"], username='root', password='verysecret')
+client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"])
 db = client.database
 scores_collection: AsyncIOMotorCollection = db["scores"]
 
@@ -36,7 +36,8 @@ def create_query_from_mod(mod: str, pp_range: Tuple[int, int], include_hd: bool)
 
     if include_hd:
         if mod == 'DT':
-            query = {'$and': [{'$or': [{'mods': mod}, {'mods': [mod, 'HD']}, {'mods': 'NC'}, {'mods': ['NC', 'HD']}]}, pp_query]}
+            query = {'$and': [{'$or': [{'mods': mod}, {'mods': [mod, 'HD']}, {'mods': 'NC'}, {'mods': ['NC', 'HD']}]},
+                              pp_query]}
         else:
             query = {'$and': [{'$or': [{'mods': mod}, {'mods': [mod, 'HD']}]}, pp_query]}
     else:
@@ -48,8 +49,10 @@ def create_query_from_mod(mod: str, pp_range: Tuple[int, int], include_hd: bool)
 @router.get(
     "", response_description="List all beatmaps"
 )
-async def list_beatmaps(mod: str = '', pp_range: Tuple[int,int] = Query([400, 900],
-        alias="pp_range[]" ), include_hd: bool = True, page: int = 1):
+async def list_beatmaps(mod: str = '',
+                        pp_range: Tuple[int, int] = Query([400, 900], alias="pp_range[]"),
+                        include_hd: bool = True,
+                        page: int = 1):
     start_time = time.time()
     limit = 10
     skip_this = (page - 1) * limit
