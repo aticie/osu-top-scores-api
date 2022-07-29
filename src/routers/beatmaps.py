@@ -11,7 +11,7 @@ router = APIRouter(prefix="/beatmaps",
                    responses={404: {"description": "Not found"}},
                    )
 
-client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URL"])
+client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGODB_URL"))
 db = client.database
 scores_collection: AsyncIOMotorCollection = db["scores"]
 
