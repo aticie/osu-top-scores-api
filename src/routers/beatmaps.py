@@ -62,7 +62,7 @@ async def list_beatmaps(mod: str = '',
     if query is not None:
         aggregation.extend([{'$match': query}])
 
-    aggregation.extend([{'$group': {'_id': "$beatmap.id", 'play_count': {'$count': {}}, 'avg_pp': {'$avg': '$pp'},
+    aggregation.extend([{'$group': {'_id': "$beatmap.id", 'play_count': {'$sum': 1}, 'avg_pp': {'$avg': '$pp'},
                                     'beatmapset_id': {'$first': "$beatmapset.id"}, 'mods': {'$addToSet': '$mods'},
                                     'beatmap_id': {'$first': "$beatmap.id"},
                                     'cover_url': {'$first': '$beatmapset.covers.cover'},
