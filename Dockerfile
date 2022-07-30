@@ -4,12 +4,11 @@ WORKDIR /usr/src/app
 
 RUN npm init vite@latest score-tracker-frontend --template svelte
 
-WORKDIR /usr/src/app/score-tracker-frontend
+WORKDIR /usr/src/app
 
-COPY ./frontend/public ./public
-COPY ./frontend/index.html ./index.html
-COPY ./frontend/src ./src
-COPY ./frontend/package.json ./package.json
+ADD ./frontend ./score-tracker-frontend
+
+WORKDIR /usr/src/app/score-tracker-frontend
 
 RUN npm install
 
