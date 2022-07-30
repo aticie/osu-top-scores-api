@@ -100,11 +100,11 @@
     >
   </div>
 
-  <div>
+  <div class="flex flex-col gap-2">
     {#each beatmaps as bmap}
-      <a href="https://osu.ppy.sh/b/${bmap.beatmap_id}" class="rounded-full overflow-hidden relative">
-        <div class="w-full h-32 rounded-md bg-cover" style="background-image: url({bmap.cover_url})" >
-          <div class="flex justify-between items-end absolute inset-3 z-10">
+      <a href="https://osu.ppy.sh/b/${bmap.beatmap_id}" class="relative rounded-md overflow-hidden">
+        <div class="w-full h-32 bg-cover rounded-lg" style="background-image: url({bmap.cover_url})" >
+          <div class="flex justify-between items-end absolute inset-3 z-10 text-shadow">
             <div class="flex flex-col justify-between h-full">
               <p>{bmap.artist}</p>
               <div>
@@ -125,7 +125,7 @@
             </div>
           </div>
 
-          <div class="absolute inset-0 bg-black bg-opacity-70" />
+          <div class="absolute inset-0 bg-dark bg-opacity-70" />
         </div>
       </a>
     {/each}
