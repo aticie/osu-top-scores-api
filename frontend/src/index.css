@@ -36,4 +36,8 @@
   .checkbox-label {
     @apply select-none;
   }
+
+  .setting-title {
+    @apply ml-2 text-neutral-500 font-semibold;
+  }
 }

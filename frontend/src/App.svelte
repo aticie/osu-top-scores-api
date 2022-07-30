@@ -21,7 +21,7 @@
 
   <div class="grid grid-cols-2 gap-x-16 gap-y-6 items-center">
     <div class="flex flex-col gap-2">
-      <p class="ml-2 font-semibold text-neutral-500">Mods</p>
+      <p class="setting-title">Mods</p>
       <div class="flex gap-2">
         {#each allMods as mod}
           <div class="relative flex items-center justify-center">
@@ -51,6 +51,7 @@
     </div>
 
     <div class="col-span-2">
+      <p class="setting-title">PP Range</p>
       <RangeSlider range float pushy step={5} min={400} max={1300} bind:values={ppRange} />
     </div>
   </div>
