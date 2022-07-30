@@ -13,7 +13,7 @@
   // settings
   let mod = "any";
   let unicode = false;
-  let includeHD = false;
+  let includeHD = true;
   let ppRange = [500, 800];
   //
 
