@@ -12,7 +12,6 @@
 
   // settings
   let mod = "any";
-  let unicode = false;
   let includeHD = true;
   let ppRange = [500, 800];
   //
@@ -78,10 +77,6 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <div class="checkbox-container">
-          <input class="checkbox" type="checkbox" id="unicode" bind:checked={unicode} />
-          <label class="checkbox-label" for="unicode">Unicode Titles</label>
-        </div>
         <div class="checkbox-container">
           <input class="checkbox" type="checkbox" id="includeHD" bind:checked={includeHD} />
           <label class="checkbox-label" for="includeHD">Include HD</label>
