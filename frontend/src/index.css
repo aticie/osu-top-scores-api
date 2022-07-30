@@ -17,7 +17,7 @@
 
   #app {
     @apply flex justify-center items-center;
-    @apply p-4;
+    @apply p-2 md:p-4;
   }
 }
 
@@ -30,7 +30,7 @@
   }
 
   .checkbox-container {
-    @apply flex gap-2;
+    @apply flex gap-2 items-center;
   }
 
   .checkbox-label {
