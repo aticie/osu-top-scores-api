@@ -36,6 +36,13 @@
     return response.data.beatmaps.length;
   };
 
+  const submit = async () => {
+    beatmaps = [];
+    page = 1;
+
+    await getBeatmaps();
+  }
+
   const loadBeatmaps = async ({ detail: { loaded, complete } }) => {
     let length = await getBeatmaps();
     if (length) {
@@ -88,7 +95,7 @@
     </div>
 
     <button
-      on:click={getBeatmaps}
+      on:click={submit}
       class="bg-red-primary rounded-md p-2 hover:bg-neutral-800 transition-colors col-span-2">Get Beatmaps</button
     >
   </div>
