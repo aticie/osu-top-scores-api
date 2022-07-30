@@ -1,28 +1,66 @@
 <script>
-    import axios from "axios";
-    import InfiniteLoading from 'svelte-infinite-loading';
-    import Button from './lib/Button.svelte';
-    import Slider from "./lib/Slider.svelte";
+  import RangeSlider from "svelte-range-slider-pips";
 
-    const all_mods = [
-        {text: "Any", req: "any"},
-        {text: "NM", req: ""},
-        {text: "HR", req: "hr"},
-        {text: "DT", req: "dt"},
-    ];
+  const allMods = [
+    { text: "NM", req: "" },
+    { text: "Any", req: "any" },
+    { text: "HR", req: "hr" },
+    { text: "DT", req: "dt" },
+  ];
 
-    let mods = 'any';
-    let unicode = false;
-    let include_hd = true;
+  // settings
+  let currentMods = "any";
+  let unicode = false;
+  let includeHD = false;
+  let ppRange = [500, 800];
+  //
+</script>
+
+<main class="flex flex-col gap-4 w-full max-w-2xl">
+  <p class="font-semibold text-2xl text-center">osu! Top 1000 Scores Database</p>
+
+  <div class="grid grid-cols-2 gap-x-16 gap-y-6 items-center">
+    <div class="flex flex-col gap-2">
+      <p class="ml-2 font-semibold text-neutral-500">Mods</p>
+      <div class="flex gap-2">
+        {#each allMods as mod}
+          <div class="relative flex items-center justify-center">
+            <input
+              class="appearance-none rounded-full border-2 border-neutral-700 h-12 w-12 checked:border-red-primary transition-colors"
+              type="radio"
+              bind:group={currentMods}
+              name="mods"
+              id={mod.text}
+              value={mod.req}
+            />
+            <label class="absolute select-none" for={mod.text}>{mod.text}</label>
+          </div>
+        {/each}
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <div class="checkbox-container">
+        <input class="checkbox" type="checkbox" id="unicode" bind:checked={unicode} />
+        <label class="checkbox-label" for="unicode">Unicode Titles</label>
+      </div>
+      <div class="checkbox-container">
+        <input class="checkbox" type="checkbox" id="includeHD" bind:checked={includeHD} />
+        <label class="checkbox-label" for="includeHD">Include HD</label>
+      </div>
+    </div>
+
+    <div class="col-span-2">
+      <RangeSlider range float pushy step={5} min={400} max={1300} bind:values={ppRange} />
+    </div>
+  </div>
+</main>
+
+<!-- <script>
     let beatmaps = [];
     let pp_range = [500, 800]
     let page = 1;
 
-    const setSliderValue = (event) => {
-        console.log('New pp range: ' + pp_range)
-        console.log(event)
-        pp_range = event.detail
-    }
 
     const infiniteHandler = ({detail: {loaded, complete}}) => {
         axios
@@ -117,4 +155,4 @@
 
     <InfiniteLoading on:infinite={infiniteHandler}/>
 </main>
-
+ -->

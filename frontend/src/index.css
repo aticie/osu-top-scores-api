@@ -5,5 +5,35 @@
 @layer base {
   html, body {
     font-family: "Inter", sans-serif;
+    @apply bg-black bg-opacity-75 text-white;
+    @apply h-full w-full;
+
+    --range-slider: rgb(38, 38, 38);
+    --range-handle-inactive: #da0037;
+    --range-handle-focus:#ff5361;
+    --range-range: #da0037;
+    --range-handle:#da0037;
+  }
+
+  #app {
+    @apply flex justify-center items-center;
+    @apply p-4;
+  }
+}
+
+@layer utilities {
+  .checkbox {
+    @apply appearance-none;
+    @apply w-5 h-5 rounded-md;
+    @apply bg-neutral-800;
+    @apply checked:bg-[url('../tick.svg')] checked:bg-red-primary;
+  }
+
+  .checkbox-container {
+    @apply flex gap-2;
+  }
+
+  .checkbox-label {
+    @apply select-none;
   }
 }
