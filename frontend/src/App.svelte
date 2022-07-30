@@ -97,7 +97,7 @@
 
   <div class="flex flex-col gap-2">
     {#each beatmaps as bmap}
-      <a href="https://osu.ppy.sh/b/${bmap.beatmap_id}" class="relative rounded-md overflow-hidden">
+      <a href="https://osu.ppy.sh/b/{bmap.beatmap_id}" class="relative rounded-md overflow-hidden">
         <div class="w-full h-32 bg-cover rounded-lg" style="background-image: url({bmap.cover_url})" >
           <div class="flex justify-between items-end absolute inset-3 z-10 text-shadow">
             <div class="flex flex-col justify-between h-full">
