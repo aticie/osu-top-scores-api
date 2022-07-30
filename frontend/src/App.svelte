@@ -33,7 +33,7 @@
     beatmaps = [...beatmaps, ...response.data.beatmaps];
     page++;
 
-    return beatmaps.length;
+    return response.data.beatmaps.length;
   };
 
   const loadBeatmaps = async ({ detail: { loaded, complete } }) => {
