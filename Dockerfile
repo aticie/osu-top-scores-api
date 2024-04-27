@@ -1,4 +1,4 @@
-FROM node:14 AS frontend_public
+FROM node:19 AS frontend_public
 
 WORKDIR /usr/src/app
 

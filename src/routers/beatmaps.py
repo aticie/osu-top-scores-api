@@ -12,8 +12,8 @@ router = APIRouter(prefix="/beatmaps",
                    )
 
 client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URL"))
-db = client.database
-scores_collection: AsyncIOMotorCollection = db["scores"]
+db = client.Farmer
+scores_collection: AsyncIOMotorCollection = db["Scores"]
 
 
 def create_query_from_mod(mod: str, pp_range: Tuple[int, int], include_hd: bool):
